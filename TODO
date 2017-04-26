@@ -1,0 +1,16 @@
+Known Issues:
+
+- Add an open license
+- Convert to Ruby functionality only (no shell commands)
+- Need to reserve words so topics can't be (new, edit, remove, list, search)
+
+Feature Requests:
+
+- Make snippets directory ${HOME}/.recollect/
+- Build in paging functionality
+- Needs to obey ${EDITOR} environment variable (how does this play on Windows?)
+- Allow for the creation of nested snippets (sub-directories)
+  - when listing, count topics in subdirectories but don't list the individual snippets
+- Add a search functionality that lists the snippet(s) containing the item searched for along with any matching content lines
+- Create a mobile app synced via dropbox?
+- add support for markdown instead of just txt files
