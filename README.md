@@ -11,9 +11,12 @@ If you haven't already, you should set your EDITOR. On OSX you can set it to Tex
 
     echo 'export EDITOR="mate -w" >> ~/.bash_profile
 
-### Walkthrough
-
-
-
-
-
+### Usage
+USAGE: recollect ACTION [arg]
+  Actions: list, new, edit, or <name> where <name> is the recollection to be displayed.
+    list        - provides a listing of all available recollections
+    name        - displays the recollection matching 'name'
+    new [name]  - provides a listing of all available recollections
+    edit [name] - provides a listing of all available recollections
+    remove [name]   - removes a recollections
+Note: ["new", "edit", "remove", "help"] are reserved and cannot be the name of a recollection.
