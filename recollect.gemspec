@@ -1,6 +1,9 @@
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'lib'))
+require 'recollect/version'
+
 Gem::Specification.new do |s|
   s.name = 'recollect'
-  s.version = ::Recollect::VERSION
+  s.version = Recollect::VERSION
   s.authors = ['Tyler Poland']
   s.email = 'recollect@tylerpoland.com'
   s.homepage = 'http://github.com/tpoland/recollect'
@@ -11,7 +14,7 @@ Gem::Specification.new do |s|
   # s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to?(:required_rubygems_version=)
   s.has_rdoc = true
   s.extra_rdoc_files = %w[LICENSE TODO]
-  s.files = %w[LICENSE README.md Rakefile TODO] + Dir.glob('lib/**/*')
+  #s.files = %w[LICENSE README.md Rakefile TODO] + Dir.glob('lib/**/*')
   # s.test_files = Dir.glob("spec/**/*")
   s.bindir = 'bin'
   s.executables = %w[recollect]
