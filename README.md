@@ -20,4 +20,4 @@ If you haven't already, you should set your EDITOR. On OSX you can set it to Tex
         new [name]  - provides a listing of all available recollections
         edit [name] - provides a listing of all available recollections
         remove [name]   - removes a recollections
-    Note: ["new", "edit", "remove", "help"] are reserved and cannot be the name of a recollection.
+    Note: ["new", "edit", "remove", "help", "search"] are reserved and cannot be the name of a recollection.
