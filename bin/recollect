@@ -2,7 +2,7 @@
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib', 'recollect'))
 
-require "recollect"
+require 'recollect'
+gem 'rubocop', require: false
 
-
-exit Recollect.new(ARGV).execute!
+Recollect::Recollection.new(ARGV).run
