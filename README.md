@@ -14,10 +14,15 @@ If you haven't already, you should set your EDITOR. On OSX you can set it to Tex
 ### Usage
 
     USAGE: recollect ACTION [arg]
+    Recollect manages a series of things worth remembering "recollections" as a series of
+    text files.
+    
       Actions: list, new, edit, or <name> where <name> is the recollection to be displayed.
-        list        - provides a listing of all available recollections
-        name        - displays the recollection matching 'name'
-        new [name]  - provides a listing of all available recollections
-        edit [name] - provides a listing of all available recollections
-        remove [name]   - removes a recollections
-    Note: ["new", "edit", "remove", "help", "search"] are reserved and cannot be the name of a recollection.
+        list            - provides a listing of all available recollections
+        name            - displays the recollection matching 'name'
+        new [name]      - creates a new recollection
+        edit [name]     - modifies an existing recollection
+        remove [name]   - removes a recollection
+    
+    Note: ["new", "edit", "remove", "help", "search"] are reserved and cannot be the name
+    of a recollection.
