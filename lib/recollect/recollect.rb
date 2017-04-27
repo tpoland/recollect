@@ -23,7 +23,7 @@ module Recollect
       puts "    name            - displays the recollection matching 'name'"
       puts '    new [name]      - creates a new recollection'
       puts '    edit [name]     - modifies an existing recollection'
-      puts '    remove [name]   - removes a recollections'
+      puts '    remove [name]   - removes a recollection'
       puts "\nNote: #{@reserved} are reserved and cannot be the name"
       puts 'of a recollection.'
       exit 1
