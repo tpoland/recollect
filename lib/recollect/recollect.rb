@@ -15,14 +15,17 @@ module Recollect
 
     def usage(msg = nil)
       puts msg unless msg.nil?
-      puts "USAGE: recollect ACTION [arg]"
+      puts "\nUSAGE: recollect ACTION [arg]\n"
+      puts 'Recollect manages a series of things worth remembering "recollections" as a series of'
+      puts "text files.\n\n"
       puts '  Actions: list, new, edit, or <name> where <name> is the recollection to be displayed.'
-      puts '    list        - provides a listing of all available recollections'
-      puts "    name        - displays the recollection matching 'name'"
-      puts '    new [name]  - provides a listing of all available recollections'
-      puts '    edit [name] - provides a listing of all available recollections'
+      puts '    list            - provides a listing of all available recollections'
+      puts "    name            - displays the recollection matching 'name'"
+      puts '    new [name]      - creates a new recollection'
+      puts '    edit [name]     - modifies an existing recollection'
       puts '    remove [name]   - removes a recollections'
-      puts "Note: #{@reserved} are reserved and cannot be the name of a recollection."
+      puts "\nNote: #{@reserved} are reserved and cannot be the name"
+      puts 'of a recollection.'
       exit 1
     end
 
