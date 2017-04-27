@@ -22,7 +22,7 @@ If you haven't already, you should set your EDITOR. On OSX you can set it to Tex
         name            - displays the recollection matching 'name'
         new [name]      - creates a new recollection
         edit [name]     - modifies an existing recollection
-        remove [name]   - removes a recollections
+        remove [name]   - removes a recollection
     
     Note: ["new", "edit", "remove", "help", "search"] are reserved and cannot be the name
     of a recollection.
