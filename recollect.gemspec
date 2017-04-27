@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.summary = "Storage, Management and Retrieval of things you'd like to remember (recollect)."
   s.description = s.summary
   s.platform = Gem::Platform::RUBY
-  s.required_ruby_version = '~> 1.9'
+  s.required_ruby_version = '> 1.9'
   s.has_rdoc = true
   s.extra_rdoc_files = %w[LICENSE TODO]
   s.bindir = 'bin'
