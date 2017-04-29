@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'pathname'
 
 module Recollect
   class Recollection
@@ -11,6 +12,7 @@ module Recollect
       @separator = '-------------------------'
       @recollect_path = File.join(ENV['HOME'], '.recollections')
       FileUtils.mkdir_p(@recollect_path)
+      @debug = ENV['DEBUG']
     end
 
     def usage(msg = nil)
@@ -19,42 +21,67 @@ module Recollect
       puts 'Recollect manages a series of things worth remembering "recollections" as a series of'
       puts "text files.\n\n"
       puts '  Actions: list, new, edit, or <name> where <name> is the recollection to be displayed.'
-      puts '    list            - provides a listing of all available recollections'
+      puts '    list [category] - provides a listing of all available recollections.'
+      puts '                      use [category] to specify a subdirectory'
       puts "    name            - displays the recollection matching 'name'"
-      puts '    new [name]      - creates a new recollection'
-      puts '    edit [name]     - modifies an existing recollection'
-      puts '    remove [name]   - removes a recollection'
+      puts '    new <name>      - creates a new recollection'
+      puts '    edit <name>     - modifies an existing recollection'
+      puts '    remove <name>   - removes a recollection'
       puts "\nNote: #{@reserved} are reserved and cannot be the name"
       puts 'of a recollection.'
       exit 1
     end
-
-    def recollection_names
-      recollections.map { |r| File.basename(r, File.extname(r)) }
+    
+    def debug(msg)
+      puts msg if @debug == '1' or @debug == 'true'
     end
 
-    def recollections
-      @recollections ||= Dir.glob(File.join(@recollect_path, '**'))
+    def recollection_names(search_path = @recollect_path)
+      rec = []
+      recollections(search_path).each do |r| 
+        abs = Pathname.new(File.expand_path(r))
+        rel = abs.relative_path_from(Pathname.new(File.expand_path(search_path)))
+        *p, f = rel.to_s.split('/')
+        file = File.basename(f, File.extname(f))
+        out = p.empty? ? file : File.join(p, file)
+        rec << out
+      end
+      rec
+    end
+
+    def recollections(search_path = @recollect_path)
+      Dir.glob(File.join(search_path, '**/*')).select { |f| f unless File.directory?(f) }
     end
 
     def verify_name(item = @name)
       unless item_exists?(item)
-        puts "Unable to find a recollecter matching '#{item}'"
-        usage
+        puts "**** Unable to find a recollection matching '#{item}'"
+        if File.directory?(File.join(@recollect_path, item))
+          puts "Here are the contents of that category:"
+          list_recollections(item)
+          exit
+        else
+          usage
+        end
       end
     end
 
     def item_exists?(item)
       recollections.find { |e| /#{item}\./ =~ e }
     end
-
+    
     def write_file
-      `#{ENV['EDITOR']} #{File.join(@recollect_path, @name) + '.txt'}`
+      fullPath = File.join(@recollect_path, @name) + '.txt'
+      subdir = File.dirname(fullPath)
+      FileUtils.mkdir_p(subdir) unless subdir == '.'
+      `#{ENV['EDITOR']} #{fullPath}`
     end
 
-    def list_recollections
+    def list_recollections(local_name = @name)
+      location = @recollect_path
+      location = File.join(@recollect_path, local_name) unless local_name.nil?
       puts "Available recollections:\n#{@separator}"
-      puts recollection_names.map { |r| '  ' + r }
+      puts recollection_names(location).map { |r| '  ' + r }
     end
 
     def new_recollection
@@ -70,13 +97,23 @@ module Recollect
 
     def remove_recollection
       verify_name
-      File.delete(File.join(@recollect_path, @name) + '.txt') if confirm?
+      if confirm?
+        File.delete(File.join(@recollect_path, @name) + '.txt')
+        cleanup_path(File.dirname(File.join(@recollect_path, @name)))
+      end
+    end
+    
+    def cleanup_path(path)
+      if path != @recollect_path && Dir["#{path}/*"].empty?
+        debug "removing #{path}..."
+        FileUtils.rmdir(path)
+        cleanup_path(File.dirname(path))
+      end
     end
 
     def print_recollection
       verify_name(@action)
       puts @separator
-      #puts `cat #{File.join(@recollect_path, @action) + '.*'}`
       File.open(File.join(@recollect_path, @action) + '.txt', 'r') do |f|
         f.each_line do |line|
           puts line

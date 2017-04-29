@@ -1,9 +1,3 @@
-Known Issues:
-
-- Add an open license
-
 Feature Requests:
 
-- Allow for the creation of nested snippets (sub-directories)
-  - when listing, count topics in subdirectories but don't list the individual snippets
 - Add a search functionality that lists the snippet(s) containing the item searched for along with any matching content lines

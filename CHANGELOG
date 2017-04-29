@@ -1,0 +1,4 @@
+0.0.6
+  - add support for subdirectories
+  - add verbose mode via DEBUG environment variable
+  - list subdirectory contents when matching recollection not found but subdirectory exists
