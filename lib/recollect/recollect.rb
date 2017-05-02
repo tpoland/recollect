@@ -1,12 +1,15 @@
 require 'fileutils'
 require 'pathname'
+require 'version'
 
 module Recollect
   class Recollection
     def initialize(args)
-      @reserved = %w[new edit remove help search]
-      usage unless args.length >= 1 && args.length <= 2
-      @action, @name = args
+      @reserved = %w[new edit remove help search append]
+      @action, @name, @append_string = args
+      usage unless args.length >= 1 && args.length <= 3
+      usage if @action == 'append' && args.length != 3
+      usage if @action != 'append' && args.length > 2
       usage if @reserved.include?(@action) && args.length < 2
       usage if args.length == 2 && @reserved.include?(@name)
       @separator = '-------------------------'
@@ -27,8 +30,11 @@ module Recollect
       puts '    new <name>      - creates a new recollection'
       puts '    edit <name>     - modifies an existing recollection'
       puts '    remove <name>   - removes a recollection'
+      puts '    search <searchstr>  - searches all recollections for "searchstr"'
+      puts '    append <name> <str> - appends <str> to the existing recollection <name>'
       puts "\nNote: #{@reserved} are reserved and cannot be the name"
       puts 'of a recollection.'
+      puts "\nVersion: #{Recollect::VERSION}"
       exit 1
     end
     
@@ -39,14 +45,18 @@ module Recollect
     def recollection_names(search_path = @recollect_path)
       rec = []
       recollections(search_path).each do |r| 
-        abs = Pathname.new(File.expand_path(r))
-        rel = abs.relative_path_from(Pathname.new(File.expand_path(search_path)))
-        *p, f = rel.to_s.split('/')
-        file = File.basename(f, File.extname(f))
-        out = p.empty? ? file : File.join(p, file)
+        out = nice_name(r, search_path)
         rec << out
       end
       rec
+    end
+    
+    def nice_name(r, search_path = @recollect_path)
+      abs = Pathname.new(File.expand_path(r))
+      rel = abs.relative_path_from(Pathname.new(File.expand_path(search_path)))
+      *p, f = rel.to_s.split('/')
+      file = File.basename(f, File.extname(f))
+      p.empty? ? file : File.join(p, file)
     end
 
     def recollections(search_path = @recollect_path)
@@ -76,6 +86,11 @@ module Recollect
       FileUtils.mkdir_p(subdir) unless subdir == '.'
       `#{ENV['EDITOR']} #{fullPath}`
     end
+    
+    def append_file
+      fullPath = File.join(@recollect_path, @name) + '.txt'
+      File.open(fullPath, 'a') {|file| file.puts "#{@append_string}" }
+    end
 
     def list_recollections(local_name = @name)
       location = @recollect_path
@@ -93,6 +108,11 @@ module Recollect
     def edit_recollection
       verify_name
       write_file
+    end
+    
+    def append_recollection
+      verify_name
+      append_file
     end
 
     def remove_recollection
@@ -120,6 +140,23 @@ module Recollect
         end
       end
     end
+    
+    def search_recollection
+      puts "Searching for '#{@name}'..."
+      puts @separator
+      count=0
+      recollections.map do |r|
+        File.open r do |file|
+          file.each_line do |line|
+            if line =~ /#{@name}/
+              puts "#{nice_name(r)} - #{line}"
+              count+=1
+            end
+          end
+        end
+      end
+      puts 'No results found!' if count == 0
+    end
 
     def confirm?
       puts "Are you sure you want to remove #{@name} [Y/n]?"
@@ -137,6 +174,10 @@ module Recollect
         edit_recollection
       when 'remove'
         remove_recollection
+      when 'search'
+        search_recollection
+      when 'append'
+        append_recollection
       else
         print_recollection
       end

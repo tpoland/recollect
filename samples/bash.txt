@@ -1,0 +1,17 @@
+Bash:
+  # change to previous directory
+    cd -        # alternative to pushd/popd
+
+  # Repeat last command
+    !!
+
+  # Replace last command with a different command and re-run with same options
+    recollert list
+    ^recollert^recollect
+
+  # run command with previous command's arguments
+    mkdir /tmp/new
+    cd !!:*
+
+  # list only sub-directories
+    ls -d */
