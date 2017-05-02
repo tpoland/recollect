@@ -15,7 +15,7 @@ Recollect includes both a `search` directive and a recollection matching capabil
 
 The search capability looks inside of files for a specific search string using a line match (`=~ /string/`).
 
-The recollection match will try to find similar recollection names when showing a recollection or when using edit, remove, or append. When only one match is found the user is prompted to confirm this is the recollection intended; on confirmation the requested action will be executed. When multiple matches are found they will be displayed as suggestions.
+The recollection match will try to find similar recollection names when showing a recollection or when using edit, remove, or append. This is a first part match, so you need to use the first part of the path or recollection name to get a match. When only one match is found the user is prompted to confirm this is the recollection intended; on confirmation the requested action will be executed. When multiple matches are found they will be displayed as suggestions.
 
 ### Usage
 
