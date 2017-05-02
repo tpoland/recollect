@@ -5,12 +5,12 @@ require 'version'
 module Recollect
   class Recollection
     def initialize(args)
-      @reserved = %w[new edit remove help search append]
+      @reserved = %w[new edit remove help list search append]
       @action, @name, @append_string = args
       usage unless args.length >= 1 && args.length <= 3
       usage if @action == 'append' && args.length != 3
       usage if @action != 'append' && args.length > 2
-      usage if @reserved.include?(@action) && args.length < 2
+      usage if @reserved.include?(@action) && args.length < 2 && @action != 'list'
       usage if args.length == 2 && @reserved.include?(@name)
       @separator = '-------------------------'
       @recollect_path = File.join(ENV['HOME'], '.recollections')
@@ -66,9 +66,21 @@ module Recollect
     def verify_name(item = @name)
       unless item_exists?(item)
         puts "**** Unable to find a recollection matching '#{item}'"
+        similar = find_similar(item)
         if File.directory?(File.join(@recollect_path, item))
           puts "Here are the contents of that category:"
           list_recollections(item)
+          exit
+        elsif similar.length == 1
+          puts "Did you mean: '#{nice_name(similar.first)}' [Y/n]?"
+          if confirm?
+            @name = nice_name(similar.first)
+          else
+            exit
+          end
+        elsif similar.length > 1
+          puts "You might have meant:"
+          similar.each { |s| puts "  #{nice_name(s)}" }
           exit
         else
           usage
@@ -78,6 +90,10 @@ module Recollect
 
     def item_exists?(item)
       recollections.find { |e| /#{item}\./ =~ e }
+    end
+    
+    def find_similar(item)
+      recollections.reject { |e| e unless /\b#{item}/ =~ nice_name(e) }
     end
     
     def write_file
@@ -117,6 +133,7 @@ module Recollect
 
     def remove_recollection
       verify_name
+      puts "Are you sure you want to remove #{@name} [Y/n]?"
       if confirm?
         File.delete(File.join(@recollect_path, @name) + '.txt')
         cleanup_path(File.dirname(File.join(@recollect_path, @name)))
@@ -132,9 +149,9 @@ module Recollect
     end
 
     def print_recollection
-      verify_name(@action)
+      verify_name
       puts @separator
-      File.open(File.join(@recollect_path, @action) + '.txt', 'r') do |f|
+      File.open(File.join(@recollect_path, @name) + '.txt', 'r') do |f|
         f.each_line do |line|
           puts line
         end
@@ -159,7 +176,6 @@ module Recollect
     end
 
     def confirm?
-      puts "Are you sure you want to remove #{@name} [Y/n]?"
       a = $stdin.gets.chomp.downcase
       a == 'y' ? true : false
     end
@@ -179,6 +195,7 @@ module Recollect
       when 'append'
         append_recollection
       else
+        @name = @action
         print_recollection
       end
     end

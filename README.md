@@ -7,9 +7,13 @@ A simple tool for creating, managing, and viewing snippets, notes, or pretty muc
 
     gem install recollect
 
-If you haven't already, you should set your EDITOR. On OSX you can set it to Textmate with a command like:
 
-    echo 'export EDITOR="mate -w" >> ~/.bash_profile
+### Search Functions
+Recollect includes both a `search` directive and a recollection matching capability.
+
+The search capability looks inside of files for a specific search string using a line match (`=~ /string/`).
+
+The recollection match will try to find similar recollection names when showing a recollection or when using edit, remove, or append. When only one match is found the user is prompted to confirm this is the recollection intended; on confirmation the requested action will be executed. When multiple matches are found they will be displayed as suggestions.
 
 ### Usage
 
@@ -31,3 +35,37 @@ If you haven't already, you should set your EDITOR. On OSX you can set it to Tex
     of a recollection.
 
     Version: 0.1.0
+
+### Examples
+
+If you haven't already, you should set your EDITOR. On OSX you can set it to Textmate with a command like:
+
+    echo 'export EDITOR="mate -w" >> ~/.bash_profile
+
+##### Create a new recollection named git
+    recollect new git   # edit, save, and close the editor
+    
+##### List the available recollections
+    recollect list
+
+##### List the available recollections under mysql/
+    recollect list mysql
+    
+##### Edit the git recollection
+    recollect edit git  # edit, save, and close the editor
+    
+##### Display the git recollection
+    recollect git
+    
+##### Search for recollections containing 'postgres'
+    recollect search 'postgres'
+    
+##### Find with a partial recollection name
+    recollect ra
+    
+    > **** Unable to find a recollection matching 'ra'
+    > You might have meant:
+    >   raid
+    >   rails
+    >   unicorn/rack
+    
