@@ -34,7 +34,7 @@ The recollection match will try to find similar recollection names when showing 
     Note: ["new", "edit", "remove", "help", "search", "append"] are reserved and cannot be the name
     of a recollection.
 
-    Version: 0.1.0
+    Version: 0.2.0
 
 ### Examples
 
